@@ -9,8 +9,7 @@ export default function AuthBar() {
     return () => sub.subscription.unsubscribe();
   }, []);
   if (user === undefined) return null;
-  if (!user) return (<button onClick={() => supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin } })}
-    className="ml-auto bg-brand px-4 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap">Sign in with Google</button>);
+  if (!user) return (<a href="/login" className="ml-auto bg-brand px-4 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap">Login</a>);
   return (<div className="ml-auto flex items-center gap-2 text-sm">
     {user.user_metadata?.avatar_url && <img src={user.user_metadata.avatar_url} alt="" className="w-7 h-7 rounded-full" />}
     <span className="hidden sm:inline truncate max-w-[120px]">{user.user_metadata?.full_name || user.email}</span>

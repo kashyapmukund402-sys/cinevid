@@ -18,6 +18,8 @@ export default function EpisodeForm({ ep }: { ep?: any }) {
       body.video_url = String(f.get("video_url") ?? "").trim();
       if (body.video_url && !validUrl(body.video_url)) throw new Error("Invalid Video URL. Enter a full link starting with http:// or https://");
       if (!body.video_url && !legacy) throw new Error("Video URL is required");
+      body.download_url = String(f.get("download_url") ?? "").trim();
+      if (body.download_url && !validUrl(body.download_url)) throw new Error("Invalid Download URL");
       if (t?.size) { setMsg("Uploading thumbnail…"); body.thumbnail_path = await up("thumb", t); }
       setMsg("Saving…"); const res = await fetch("/api/admin/episode", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
       const j = await res.json(); if (!res.ok) throw new Error(j.error); r.push("/admin"); r.refresh();
@@ -30,6 +32,7 @@ export default function EpisodeForm({ ep }: { ep?: any }) {
     <input name="title" defaultValue={ep?.title} placeholder="Title" required className={c} />
     <textarea name="description" defaultValue={ep?.description} placeholder="Description" rows={4} className={c} />
     <label className="block text-sm">Video URL{legacy && " – leave empty to keep the current uploaded video"}<input name="video_url" type="text" inputMode="url" defaultValue={ep?.video_url ?? ""} placeholder="https://example.com/video.mp4" required={!legacy} className={c} /></label>
+    <label className="block text-sm">Download link (optional, https only)<input name="download_url" type="text" inputMode="url" defaultValue={(ep as any)?.download_url ?? ""} placeholder="https://your-host.com/episode.mp4" className={c} /></label>
     <label className="block text-sm">Thumbnail (jpg/png/webp){ep && " – leave empty to keep current"}<input name="thumb" type="file" accept="image/*" className={c} /></label>
     <input name="pin" inputMode="numeric" pattern="\d{4}" maxLength={4} placeholder={ep ? "New 4-digit password (empty = keep)" : "4-digit password"} required={!ep} className={c} />
     <label className="block text-sm">Publish date<input name="published_at" type="datetime-local" defaultValue={ep ? new Date(ep.published_at).toISOString().slice(0, 16) : ""} className={c} /></label>

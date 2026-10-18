@@ -71,9 +71,6 @@ export default function Gate({ n, title, poster }: { n: number; title: string; p
     const j = await r.json(); setBusy(false);
     if (r.ok) { setKeyInput(""); setNewKey(""); await loadStatus(); } else setErr(j.error || "Failed");
   }
-  async function signIn() {
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin } });
-  }
 
   const safe = (u: string) => /^https?:\/\//i.test(u);
   const box = "rounded-xl bg-zinc-900 border border-white/10 p-6";
@@ -86,7 +83,7 @@ export default function Gate({ n, title, poster }: { n: number; title: string; p
     <div className={`${box} text-center`}>
       <h3 className="font-semibold mb-2">Login karein video dekhne ke liye</h3>
       <p className="text-white/60 text-sm mb-4">Google se login karein, phir Free Access ya Premium se video khul jayega.</p>
-      <button onClick={signIn} className={btn}>Sign in with Google</button>
+      <a href={`/login?next=${encodeURIComponent(`/episode/${n}`)}`} className={btn}>Login / Register</a>
     </div>
   );
 
